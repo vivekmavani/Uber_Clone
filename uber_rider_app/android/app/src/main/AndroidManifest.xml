@@ -3,11 +3,12 @@
     package="com.example.uber_rider_app">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+  <!--    AIzaSyD88P-7cNugbnkti3lh14j4LxG6uzc1p7Q-->
    <application
         android:label="uber_rider_app"
         android:icon="@mipmap/ic_launcher">
        <meta-data android:name="com.google.android.geo.API_KEY"
-           android:value="AIzaSyD88P-7cNugbnkti3lh14j4LxG6uzc1p7Q"/>
+           android:value="AIzaSyCadHgYeLI0UTVZ0vR-R3eplB-E58LNSIg"/>
 
        <activity
             android:name=".MainActivity"

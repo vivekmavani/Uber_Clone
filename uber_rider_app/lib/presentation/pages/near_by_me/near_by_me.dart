@@ -204,7 +204,7 @@ class _NearByMeState extends State<NearByMe> {
       icon: document.vehicle.path.split('/').first == "cars"
           ? BitmapDescriptor.fromBytes(
               await getBytesFromAsset('assets/car.png', 100))
-          : document.vehicle.path.split('/').first == "bike"
+          : document.vehicle.path.split('/').first == "bikes"
               ? BitmapDescriptor.fromBytes(
                   await getBytesFromAsset('assets/bike.png', 100))
               : BitmapDescriptor.fromBytes(
@@ -247,4 +247,6 @@ class _NearByMeState extends State<NearByMe> {
         .buffer
         .asUint8List();
   }
+
+
 }

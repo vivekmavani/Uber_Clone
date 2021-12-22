@@ -12,6 +12,7 @@ class DriverEntity  extends Equatable{
   final DocumentReference? wallet;
   final DocumentReference? vehicle;
   final GeoPoint? currentLocation;
+  final String? driver_id;
 
   DriverEntity(
       {
@@ -24,7 +25,8 @@ class DriverEntity  extends Equatable{
       this.total_trips,
       this.wallet,
       this.vehicle,
-      this.currentLocation});
+      this.currentLocation,
+        this.driver_id });
 
   @override
   List<Object?> get props => [name,
@@ -36,5 +38,5 @@ class DriverEntity  extends Equatable{
     total_trips,
     wallet,
     vehicle,
-    currentLocation];
+    currentLocation,driver_id];
 }
