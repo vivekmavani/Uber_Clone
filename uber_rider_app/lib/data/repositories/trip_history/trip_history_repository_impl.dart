@@ -48,4 +48,15 @@ class TripHistoryRepositoryImpl implements TripHistoryRepository{
       _combiner,
     );
   }
+ @override
+ Future<void> setRating(TripDriver tripDriver) async {
+   firebaseNearByMeDataSource.setData(
+     path: 'trips/${tripDriver.tripHistoryModel.tripId}',
+     data: tripDriver.tripHistoryModel.toMap(),
+   );
+   firebaseNearByMeDataSource.setData(
+     path: 'drivers/${tripDriver.driverModel.driver_id}',
+     data: tripDriver.driverModel.toMap(),
+   );
+ }
 }

@@ -196,15 +196,15 @@ class _NearByMeState extends State<NearByMe> {
   Future<void> _addMarker(model.DriverModel document) async {
     var _marker = Marker(
       markerId: MarkerId(UniqueKey().toString()),
-      position: LatLng(document.currentLocation.latitude, document.currentLocation.longitude),
+      position: LatLng(document.currentLocation!.latitude, document.currentLocation!.longitude),
       infoWindow: InfoWindow(
         title: document.name,
-        snippet: document.vehicle.path,
+        snippet: document.vehicle!.path,
       ),
-      icon: document.vehicle.path.split('/').first == "cars"
+      icon: document.vehicle!.path.split('/').first == "cars"
           ? BitmapDescriptor.fromBytes(
               await getBytesFromAsset('assets/car.png', 100))
-          : document.vehicle.path.split('/').first == "bikes"
+          : document.vehicle!.path.split('/').first == "bikes"
               ? BitmapDescriptor.fromBytes(
                   await getBytesFromAsset('assets/bike.png', 100))
               : BitmapDescriptor.fromBytes(
@@ -218,7 +218,7 @@ class _NearByMeState extends State<NearByMe> {
   void _updateMarkers(List<model.DriverModel> documentList) {
     documentList.forEach((model.DriverModel document) {
       if (distance(c.currentPosition.latitude, c.currentPosition.longitude,
-              document.currentLocation.latitude, document.currentLocation.longitude, "K") <=
+              document.currentLocation!.latitude, document.currentLocation!.longitude, "K") <=
           1) {
         _addMarker(document);
       }

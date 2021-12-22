@@ -12,13 +12,12 @@ class TripHistoryEntity extends Equatable{
   final DocumentReference? driverId;
   final DocumentReference? riderId;
   final String? travellingTime;
-  final DateTime? tripDate;
+  final String? tripDate;
   final String? tripId;
   final bool? isCompleted;
   final bool? visiblityToDriver;
   final String? tripAmount;
   final double? rating;
-  final DriverModel? driverModel;
 
    TripHistoryEntity(
       {this.source,
@@ -34,13 +33,12 @@ class TripHistoryEntity extends Equatable{
       this.isCompleted,
       this.visiblityToDriver,
       this.tripAmount,
-      this.rating,
-      this.driverModel});
+      this.rating});
 
   @override
   List<Object?> get props => [
     source, destination, sourceLocation, destinationLocation, distance,
     driverId, riderId, travellingTime, tripDate, tripId,
-    isCompleted, visiblityToDriver, tripAmount,rating,driverModel
+    isCompleted, visiblityToDriver, tripAmount,rating
   ];
 }

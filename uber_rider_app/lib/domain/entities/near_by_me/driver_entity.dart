@@ -6,13 +6,14 @@ class DriverEntity  extends Equatable{
   final String? email;
   final bool? is_online;
   final String? mobile;
-  final int? overall_rating;
+  final String? overall_rating;
   final String? profile_img;
   final String? total_trips;
   final DocumentReference? wallet;
   final DocumentReference? vehicle;
   final GeoPoint? currentLocation;
   final String? driver_id;
+
 
   DriverEntity(
       {
