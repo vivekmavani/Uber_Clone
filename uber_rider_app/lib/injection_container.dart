@@ -9,6 +9,7 @@ import 'data/repositories/trip_history/trip_history_repository_impl.dart';
 import 'domain/repositories/near_by_me/near_by_me_repository.dart';
 import 'domain/repositories/trip_history/trip_history_repository.dart';
 import 'domain/use_cases/near_by_me/near_by_drivers_stream_usecase.dart';
+import 'domain/use_cases/trip_history/driver_rating_usecase.dart';
 
 final sl = GetIt.instance;
 
@@ -22,12 +23,13 @@ Future<void> init() async {
   );
   sl.registerFactory(
         () => TripHistoryCubit(
-         tripDriverStreamUseCase: sl(),
+         tripDriverStreamUseCase: sl(), driverRatingUseCase: sl(),
     ),
   );
   // Use cases
   sl.registerLazySingleton(() => NearByDriversStreamUseCase(repository: sl()));
   sl.registerLazySingleton(() => TripDriverStreamUseCase(repository: sl()));
+  sl.registerLazySingleton(() => DriverRatingUseCase(repository: sl()));
 // Repository
   sl.registerLazySingleton<NearByMeRepository>(
         () => NearByMeRepositoryImpl(firebaseNearByMeDataSource: sl()
