@@ -23,29 +23,42 @@ class UserReqCubit extends Cubit<UserReqState> {
   getUserReq() {
     try {
           emit(UserReqLoading());
+          if(accept == false)
+          {
           final Stream<List<TripDriver>> tripHistoryList =
-          tripHistoryUseCase.repository.tripDriverStream(false);
+          tripHistoryUseCase.repository.tripDriverStream(false,accept == false ? null : tripDriverUpdated!.tripHistoryModel.tripId);
           tripHistoryList.listen((event) {
-            if(accept == false)
+            if(accept == false) {
+              emit(UserReqLoaded(tripHistoryList: event));
+            }else
               {
-                emit(UserReqLoaded(tripHistoryList: event));
+                final Stream<List<TripDriver>> tripHistoryList =
+                tripHistoryUseCase.repository.tripDriverStream(false,accept == false ? null : tripDriverUpdated!.tripHistoryModel.tripId);
+                tripHistoryList.listen((event) {
+                  emit(UserReqDisplayOne(tripDriver: event[0]));
+                });
+              }
+          });
               }else
                 {
-                  emit(UserReqDisplayOne(tripDriver: tripDriverUpdated!));
+                  final Stream<List<TripDriver>> tripHistoryList =
+                  tripHistoryUseCase.repository.tripDriverStream(false,accept == false ? null : tripDriverUpdated!.tripHistoryModel.tripId);
+                  tripHistoryList.listen((event) {
+                    emit(UserReqDisplayOne(tripDriver: event[0]));
+                  });
+
                 }
 
-          });
     } catch (e) {
       print(e);
       emit(UserReqFailureState(e.toString()));
     }
   }
 
-  isAccept(TripDriver tripDriver) async {
+  isAccept(TripDriver tripDriver,bool isDriver, bool isCompleted) async {
     accept = true;
     tripDriverUpdated = tripDriver;
     try {
-      // emit(const NearByMeLoading());
       await driverUpdateUseCase.repository
           .updateDriverAndTrip(
               TripDriver(
@@ -56,7 +69,7 @@ class UserReqCubit extends Cubit<UserReqState> {
                       tripId: tripDriver.tripHistoryModel.tripId,
                       distance: tripDriver.tripHistoryModel.distance,
                       source: tripDriver.tripHistoryModel.source,
-                      isCompleted: tripDriver.tripHistoryModel.isCompleted,
+                      isCompleted: tripDriver.tripHistoryModel.isArrived == true && isCompleted == false ? true : tripDriver.tripHistoryModel.isCompleted,
                       travellingTime:
                           tripDriver.tripHistoryModel.travellingTime,
                       tripDate: tripDriver.tripHistoryModel.tripDate.toString(),
@@ -64,15 +77,15 @@ class UserReqCubit extends Cubit<UserReqState> {
                       rating: tripDriver.tripHistoryModel.rating,
                       sourceLocation:
                           tripDriver.tripHistoryModel.sourceLocation,
-                      readyForTrip: accept,
+                      readyForTrip: isDriver == true ? accept : tripDriver.tripHistoryModel.readyForTrip,
                       riderId: tripDriver.tripHistoryModel.riderId,
-                      isArrived: tripDriver.tripHistoryModel.isArrived),
+                      isArrived: isDriver == true ? tripDriver.tripHistoryModel.isArrived : true),
                   RiderModel(
                       rider_id: tripDriver.riderModel.rider_id,
                       name: tripDriver.riderModel.name)),
               DriverModel(
                   is_online: false,
-                  driver_id: '6AAsESfgvWdN7g4YE8D3',));
+                  driver_id: '6AAsESfgvWdN7g4YE8D3',),isDriver);
     } catch (e) {
       print(e);
       emit(UserReqFailureState(e.toString()));

@@ -13,14 +13,14 @@ class TripHistoryRepositoryImpl implements TripHistoryRepository{
   TripHistoryRepositoryImpl({required this.firebaseNearByMeDataSource});
   
 
-  Stream<List<TripHistoryModel>> tripHistoryStream(bool isHistory) {
+  Stream<List<TripHistoryModel>> tripHistoryStream(bool isHistory, String? tripId) {
     return firebaseNearByMeDataSource.collectionStream(
         path: 'trips',
         builder: (data,id) =>  TripHistoryModel.fromJson(data,id),
         queryBuilder: (query) =>
       isHistory == true ? query.
         where('driver_id', isEqualTo: FirebaseFirestore.instance.collection('drivers').doc('6AAsESfgvWdN7g4YE8D3')) :
-        query.
+      tripId != null ? query.where('trip_id', isEqualTo: tripId) :  query.
         where('driver_id', isEqualTo: FirebaseFirestore.instance.collection('drivers').doc('6AAsESfgvWdN7g4YE8D3'))
             .where('ready_for_trip',isEqualTo: false)
       ,
@@ -47,23 +47,27 @@ class TripHistoryRepositoryImpl implements TripHistoryRepository{
  }
 
   @override
-  Stream<List<TripDriver>> tripDriverStream(bool isHistory) {
+  Stream<List<TripDriver>> tripDriverStream(bool isHistory,String? tripId) {
   return  Rx.combineLatest2(
-      tripHistoryStream(isHistory),
+      tripHistoryStream(isHistory,tripId),
       riderList(),
       _combiner,
     );
   }
 
   @override
-  Future<void> updateDriverAndTrip(TripDriver tripDriver,DriverModel driverModel) async {
-    firebaseNearByMeDataSource.setData(
-      path: 'trips/${tripDriver.tripHistoryModel.tripId}',
-      data: tripDriver.tripHistoryModel.toMap(),
-    );
-    firebaseNearByMeDataSource.setData(
-      path: 'drivers/${driverModel.driver_id}',
-      data: driverModel.toMap(),
-    );
+  Future<void> updateDriverAndTrip(TripDriver tripDriver,DriverModel driverModel,bool isDriver) async {
+      firebaseNearByMeDataSource.setData(
+        path: 'trips/${tripDriver.tripHistoryModel.tripId}',
+        data: tripDriver.tripHistoryModel.toMap(),
+      );
+      if(isDriver)
+        {
+          firebaseNearByMeDataSource.setData(
+            path: 'drivers/${driverModel.driver_id}',
+            data: driverModel.toMap(),
+          );
+        }
+
   }
 }

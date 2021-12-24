@@ -10,7 +10,7 @@ class TripHistoryUseCase extends UseCase<List<TripDriver>, Params>{
 
   @override
   Stream<List<TripDriver>> call(Params params) {
-    return repository.tripDriverStream(params.type as bool);
+    return repository.tripDriverStream(params.type as bool,params.type as String);
   }
 
   @override

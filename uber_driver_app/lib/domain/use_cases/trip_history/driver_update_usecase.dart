@@ -15,6 +15,6 @@ class DriverUpdateUseCase extends UseCase<TripDriver, Params>{
 
   @override
   Future<void> call2(Params params) {
-    return repository.updateDriverAndTrip(params.type as TripDriver,params.type as DriverModel);
+    return repository.updateDriverAndTrip(params.type as TripDriver,params.type as DriverModel,params.type as bool);
   }
 }

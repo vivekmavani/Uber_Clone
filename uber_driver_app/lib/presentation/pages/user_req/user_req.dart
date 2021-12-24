@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uber_driver_app/domain/entities/trip_history/trip_driver.dart';
 import 'package:uber_driver_app/presentation/cubit/user_req/user_req_cubit.dart';
+import 'package:uber_driver_app/presentation/widgets/trip_history/custom_elevated_button.dart';
 import 'package:uber_driver_app/presentation/widgets/trip_history/loading_widget.dart';
 import 'package:uber_driver_app/presentation/widgets/trip_history/message_display.dart';
 
@@ -34,6 +35,7 @@ class _UserReqState extends State<UserReq> {
         centerTitle: true,
       ),
       body: Container(
+        color: Colors.blue,
         child: Center(
           child: RaisedButton(
             child: Text("Show Rider Request"),
@@ -48,6 +50,11 @@ class _UserReqState extends State<UserReq> {
 
   void show() {
     showModalBottomSheet(
+      isScrollControlled: true,
+        barrierColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
         context: context,
         builder: (builder) {
           BlocProvider.of<UserReqCubit>(context).getUserReq();
@@ -96,24 +103,16 @@ class _UserReqState extends State<UserReq> {
                                 ),
                                 leading: Text(
                                     '${state.tripHistoryList[index].tripHistoryModel.tripAmount}\u{20B9}'),
-                                trailing: ElevatedButton(
+                                trailing: CustomElevatedButton(
                                   onPressed: () {
-                                       BlocProvider.of<UserReqCubit>(context).isAccept(state.tripHistoryList[index]);
+                                       BlocProvider.of<UserReqCubit>(context).isAccept(state.tripHistoryList[index],true,false);
                                   },
-                                  //arrived true and completed false -> ongoing
-                                  child: const Text(
-                                    'ACCEPT',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all(Colors.black),
-                                  ),
+                                  text: 'ACCEPT',
                                 ),
                               );
                             }),
                   );
-                } else if (state is UserReqFailureState) {//000
+                } else if (state is UserReqFailureState) {
                   return MessageDisplay(
                     message: state.message,
                   );
@@ -140,19 +139,20 @@ class _UserReqState extends State<UserReq> {
                             Text(
                                 'travelling time: ${state.tripDriver.tripHistoryModel.travellingTime}',
                                 overflow: TextOverflow.ellipsis),
-                            ElevatedButton(
+                            CustomElevatedButton(
                               onPressed: () {
                                 // update is_arrived = true
+                                if(state.tripDriver.tripHistoryModel.isCompleted == false)
+                                  {
+                                    BlocProvider.of<UserReqCubit>(context).isAccept(state.tripDriver,false,false);
+                                  }else
+                                    {
+                                      BlocProvider.of<UserReqCubit>(context).isAccept(state.tripDriver,false,false);
+                                    }
+
                               },
-                              //arrived true and completed false -> ongoing
-                              child: const Text(
-                                'ARRIVED',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              style: ButtonStyle(
-                                backgroundColor:
-                                MaterialStateProperty.all(Colors.black),
-                              ),
+                              text: state.tripDriver.tripHistoryModel.isArrived == false ? 'ARRIVED' :
+                              state.tripDriver.tripHistoryModel.isCompleted == true ? 'ACCEPT PAYMENT' : 'COMPLETED',
                             ),
                           ],
                         ),
