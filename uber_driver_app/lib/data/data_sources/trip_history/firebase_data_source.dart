@@ -26,5 +26,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
        return result;
      });
    }
-
+   Future<void> setData({
+     required String path,
+     required Map<String, dynamic> data,
+   }) async {
+     final reference = FirebaseFirestore.instance.doc(path);
+     print('$path: $data');
+     await reference.update(data);
+   }
 }

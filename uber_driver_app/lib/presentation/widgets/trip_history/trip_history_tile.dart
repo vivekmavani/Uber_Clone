@@ -33,9 +33,12 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
                       onPressed: () {
                         debugPrint('Received click');
                       },
+                      //arrived true and completed false -> ongoing
                       child: widget.tripHistoryEntity.tripHistoryModel
                                   .isCompleted ==
-                              true
+                              true &&  widget.tripHistoryEntity.tripHistoryModel
+                          .isArrived ==
+                          true
                           ? const Text('COMPLETED')
                           : const Text('ONGOING'),
                       style: ButtonStyle(

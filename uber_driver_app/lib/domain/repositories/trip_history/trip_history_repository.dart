@@ -1,7 +1,10 @@
 
 
+
 import 'package:uber_driver_app/domain/entities/trip_history/trip_driver.dart';
+import 'package:uber_driver_app/presentation/cubit/trip_history/driver_model.dart';
 
 abstract class TripHistoryRepository{
-  Stream<List<TripDriver>> tripDriverStream();
+  Stream<List<TripDriver>> tripDriverStream(bool isHistory);
+  Future<void> updateDriverAndTrip(TripDriver tripDriver,DriverModel driverModel);
 }

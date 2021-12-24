@@ -16,7 +16,7 @@ class TripHistoryCubit extends Cubit<TripHistoryState> {
     try {
       emit(const TripHistoryLoading());
       final Stream<List<TripDriver>> tripHistoryList =
-      tripHistoryUseCase.repository.tripDriverStream();
+      tripHistoryUseCase.repository.tripDriverStream(true);
       tripHistoryList.listen((event) {
         emit(TripHistoryLoaded(tripHistoryList: event));
       });
