@@ -6,7 +6,7 @@ import 'package:uber_driver_app/data/models/trip_history/trip_history_model.dart
 import 'package:uber_driver_app/domain/entities/trip_history/trip_driver.dart';
 import 'package:uber_driver_app/domain/use_cases/trip_history/driver_update_usecase.dart';
 import 'package:uber_driver_app/domain/use_cases/trip_history/trip_history_usecase.dart';
-import 'package:uber_driver_app/presentation/cubit/trip_history/driver_model.dart';
+import 'package:uber_driver_app/data/models/driver_location/driver_model.dart';
 
 part 'user_req_state.dart';
 

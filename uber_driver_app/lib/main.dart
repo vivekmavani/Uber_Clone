@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:uber_driver_app/presentation/cubit/driver_location/driver_location_cubit.dart';
 import 'package:uber_driver_app/presentation/cubit/trip_history/trip_history_cubit.dart';
 import 'package:uber_driver_app/presentation/cubit/user_req/user_req_cubit.dart';
 import 'package:uber_driver_app/presentation/pages/trip_history/trip_history.dart';
@@ -25,8 +26,15 @@ class MyApp extends StatelessWidget {
         create: (BuildContext context) => di.sl<TripHistoryCubit>(),
         child: TripHistory(),
       ),*/
-      home: BlocProvider(
-        create: (BuildContext context) => di.sl<UserReqCubit>(),
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<UserReqCubit>(
+            create: (BuildContext context) => di.sl<UserReqCubit>(),
+          ),
+          BlocProvider<DriverLocationCubit>(
+            create: (BuildContext context) => di.sl<DriverLocationCubit>(),
+          ),
+        ],
         child: UserReq(),
       ),
       debugShowCheckedModeBanner: false,

@@ -1,12 +1,12 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:uber_driver_app/data/data_sources/trip_history/firebase_data_source.dart';
+import 'package:uber_driver_app/data/data_sources/common/firebase_data_source.dart';
 import 'package:uber_driver_app/data/models/trip_history/rider_model.dart';
 import 'package:uber_driver_app/data/models/trip_history/trip_history_model.dart';
 import 'package:uber_driver_app/domain/entities/trip_history/trip_driver.dart';
 import 'package:uber_driver_app/domain/repositories/trip_history/trip_history_repository.dart';
-import 'package:uber_driver_app/presentation/cubit/trip_history/driver_model.dart';
+import 'package:uber_driver_app/data/models/driver_location/driver_model.dart';
 
 class TripHistoryRepositoryImpl implements TripHistoryRepository{
  final FirebaseDataSource firebaseNearByMeDataSource;

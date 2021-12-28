@@ -23,7 +23,6 @@ class _TripHistoryState extends State<TripHistory> {
   }
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
