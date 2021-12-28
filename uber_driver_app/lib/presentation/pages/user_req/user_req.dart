@@ -7,9 +7,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_driver_app/data/models/driver_location/driver_model.dart';
-import 'package:uber_driver_app/domain/entities/trip_history/trip_driver.dart';
 import 'package:uber_driver_app/presentation/controller/driver_location/driver_location_controller.dart';
 import 'package:uber_driver_app/presentation/cubit/driver_location/driver_location_cubit.dart';
+import 'package:uber_driver_app/presentation/cubit/internet/internet_cubit.dart';
 import 'package:uber_driver_app/presentation/cubit/user_req/user_req_cubit.dart';
 import 'package:uber_driver_app/presentation/widgets/driver_location/functional_button.dart';
 import 'package:uber_driver_app/presentation/widgets/driver_location/is_online_widget.dart';
@@ -49,15 +49,18 @@ class _UserReqState extends State<UserReq> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar:
-          BlocBuilder<DriverLocationCubit, DriverLocationState>(
-        builder: (context, state) {
-          if (state is DriverLocationLoaded) {
+    return BlocBuilder<InternetCubit, InternetState>(
+  builder: (context, state) {
+    if(state is InternetConnected){
+      return Scaffold(
+        bottomNavigationBar:
+        BlocBuilder<DriverLocationCubit, DriverLocationState>(
+          builder: (context, state) {
+            if (state is DriverLocationLoaded) {
               is_online = state.driverModel.is_online!;
-            if(state.driverModel.is_online == true ){
-             startTimer(state.driverModel);
-            }else
+              if(state.driverModel.is_online == true ){
+                startTimer(state.driverModel);
+              }else
               {
                 try {
                   _timer!.cancel();
@@ -65,68 +68,68 @@ class _UserReqState extends State<UserReq> {
                   print(e);
                 }
               }
-            return Container(
-              height: 90,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 11,
-                      offset: Offset(3.0, 4.0))
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  InkWell(
-                    onTap: show,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Icon(Icons.keyboard_arrow_up),
+              return Container(
+                height: 90,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey,
+                        blurRadius: 11,
+                        offset: Offset(3.0, 4.0))
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: show,
+                      child: Container(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Icon(Icons.keyboard_arrow_up),
+                      ),
                     ),
-                  ),
-                  Text(
-                      state.driverModel.is_online == true
-                          ? "You're online"
-                          : "You're offline",
-                      style: TextStyle(fontSize: 30, color: Colors.blueAccent)),
-                  Container(
-                      padding: EdgeInsets.only(right: 20),
-                      child: Icon(Icons.list)),
-                ],
-              ),
-            );
-          }
-          return const CircularProgressIndicator();
-        },
-      ),
-      resizeToAvoidBottomInset: false,
-      bottomSheet: Container(
-        height: 300,
-        decoration: BoxDecoration(color: Colors.black),
-        child: Column(),
-      ),
-      body: Stack(
-        children: <Widget>[
-          GoogleMap(
-            initialCameraPosition: _initialLocation,
-            myLocationButtonEnabled: false,
-            onMapCreated: (controller) => _mapController.complete(controller),
-            markers: _markers,
-            myLocationEnabled: true,
-            mapType: MapType.normal,
-            zoomGesturesEnabled: true,
-            zoomControlsEnabled: false,
-          ),
-          Positioned(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                margin: EdgeInsets.only(top: 30),
-                child: BlocBuilder<DriverLocationCubit, DriverLocationState>(
-                  builder: (context, state) {
-                    if(state is DriverLocationLoaded)
+                    Text(
+                        state.driverModel.is_online == true
+                            ? "You're online"
+                            : "You're offline",
+                        style: TextStyle(fontSize: 30, color: Colors.blueAccent)),
+                    Container(
+                        padding: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.list)),
+                  ],
+                ),
+              );
+            }
+            return const CircularProgressIndicator();
+          },
+        ),
+        resizeToAvoidBottomInset: false,
+        bottomSheet: Container(
+          height: 300,
+          decoration: BoxDecoration(color: Colors.black),
+          child: Column(),
+        ),
+        body: Stack(
+          children: <Widget>[
+            GoogleMap(
+              initialCameraPosition: _initialLocation,
+              myLocationButtonEnabled: false,
+              onMapCreated: (controller) => _mapController.complete(controller),
+              markers: _markers,
+              myLocationEnabled: true,
+              mapType: MapType.normal,
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: false,
+            ),
+            Positioned(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  margin: EdgeInsets.only(top: 30),
+                  child: BlocBuilder<DriverLocationCubit, DriverLocationState>(
+                    builder: (context, state) {
+                      if(state is DriverLocationLoaded)
                       {
                         return Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -141,10 +144,10 @@ class _UserReqState extends State<UserReq> {
                               online: state.driverModel.is_online == true ?  "Online" : "Offline",
                               onPressed: () {
                                 if(state.driverModel.is_online != null)
-                                  {
-                                    BlocProvider.of<DriverLocationCubit>(context).updateDriver(!state.driverModel.is_online!,state.driverModel);
-                                  }
-                                },
+                                {
+                                  BlocProvider.of<DriverLocationCubit>(context).updateDriver(!state.driverModel.is_online!,state.driverModel);
+                                }
+                              },
                             ),
                             ProfileWidget(
                               onPressed: () =>
@@ -154,39 +157,46 @@ class _UserReqState extends State<UserReq> {
                           ],
                         );
                       }
-                    return const CircularProgressIndicator();
-                  },
+                      return const CircularProgressIndicator();
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            child: Container(
-              margin: EdgeInsets.only(bottom: 20),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    FunctionalButton(
-                      icon: Icons.my_location,
-                      title: "",
-                      onPressed: (){
-                        _getCurrentLocation();
-                      },
-                    ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                    )
-                  ],
+            Positioned(
+              child: Container(
+                margin: EdgeInsets.only(bottom: 20),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      FunctionalButton(
+                        icon: Icons.my_location,
+                        title: "",
+                        onPressed: (){
+                          _getCurrentLocation();
+                        },
+                      ),
+                      Container(
+                        width: 50,
+                        height: 50,
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
-      ),
-    );
+            )
+          ],
+        ),
+      );
+    }else if(state is InternetDisconnected)
+      {
+        return const MessageDisplay(message: 'Check Your Internet Connection.',);
+      }
+    return LoadingWidget();
+  },
+);
   }
 
   // Method for retrieving the current location

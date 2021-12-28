@@ -1,5 +1,7 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:uber_driver_app/presentation/cubit/driver_location/driver_location_cubit.dart';
+import 'package:uber_driver_app/presentation/cubit/internet/internet_cubit.dart';
 import 'package:uber_driver_app/presentation/cubit/trip_history/trip_history_cubit.dart';
 import 'package:uber_driver_app/presentation/cubit/user_req/user_req_cubit.dart';
 
@@ -30,6 +32,11 @@ Future<void> init() async {
   );
 
   sl.registerFactory(
+        () => InternetCubit(connectivity: sl()
+    ),
+  );
+
+  sl.registerFactory(
         () => DriverLocationCubit(driverLocationUseCase: sl()),
   );
   // Use cases
@@ -48,6 +55,9 @@ Future<void> init() async {
   // Data sources
   sl.registerLazySingleton<FirebaseDataSource>(
         () => FirebaseDataSource(),
+  );
+  sl.registerLazySingleton<Connectivity>(
+        () => Connectivity(),
   );
 
 }
