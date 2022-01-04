@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:uber_driver_app/presentation/cubit/driver_location/driver_location_cubit.dart';
-import 'package:uber_driver_app/presentation/cubit/internet/internet_cubit.dart';
-import 'package:uber_driver_app/presentation/cubit/user_req/user_req_cubit.dart';
-import 'package:uber_driver_app/presentation/pages/user_req/user_req.dart';
+import 'package:get/get.dart';
+import 'package:uber_driver_app/features/uber_auth_feature/presentation/pages/uber_splash_screen.dart';
+import 'package:uber_driver_app/features/uber_trip_feature/presentation/cubit/driver_live_location/driver_location_cubit.dart';
+
+import 'package:uber_driver_app/features/uber_trip_feature/presentation/cubit/available_for_ride/user_req_cubit.dart';
+import 'features/uber_trip_feature/presentation/cubit/internet/internet_cubit.dart';
+
 import 'injection_container.dart' as di;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,32 +22,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Uber Driver',
-     /* home: BlocProvider(
-        create: (BuildContext context) => di.sl<TripHistoryCubit>(),
-        child: TripHistory(),
-      ),*/
-      /*home: BlocProvider(
-        create: (BuildContext context) => di.sl<InternetCubit>(),
-        child: InternetPage(),
-      ),*/
-      home: MultiBlocProvider(
-        providers: [
-          BlocProvider<InternetCubit>(
-            create: (BuildContext context) => di.sl<InternetCubit>(),
-          ),
-          BlocProvider<UserReqCubit>(
-            create: (BuildContext context) => di.sl<UserReqCubit>(),
-          ),
-          BlocProvider<DriverLocationCubit>(
-            create: (BuildContext context) => di.sl<DriverLocationCubit>(),
-          ),
-        ],
-        child: UserReq(),
-      ),
       debugShowCheckedModeBanner: false,
+      home: BlocProvider<InternetCubit>(
+        create: (BuildContext context) => di.sl<InternetCubit>(),
+        child: const UberSplashScreen(),
+      ),
     );
   }
-
 }
